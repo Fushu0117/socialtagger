@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video 2</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.plyr.io/3.7.2/plyr.polyfilled.js"></script>
+<script src="video2.js" defer></script>
+</head>
+<body>
+<div class="video-menu">
+    <button onclick="window.location='video1.html'">Video 1</button>
+    <button onclick="window.location='video3.html'">Video 2</button>
+    <button onclick="window.location='video4.html'">Video 3</button>
+    <button onclick="window.location='video5.html'">Video 5</button>
+</div>
+<div class="video-container">
+    <video id="" class="plyr" controls>
+        <source src="videos/23deoctubre2023_video4.mp4" type="video/mp4">
+        Tu navegador no soporta videos HTML5.
+    </video>
+
+
+    <div class="label-form">
+        <input type="text" id="labelText" placeholder="Enter label text here" />
+        <button onclick="saveLabel()">Crear etiqueta</button>
+    </div>
+
+    <div class="label-counter">
+        <p>Total labels created: <span id="totalLabels">0</span></p>
+    </div>
+    <div class="label-counter">
+    <p>Matching labels: <span id="matchingLabels">0</span></p>
+</div>
+</div>
+</body>
+</html>
