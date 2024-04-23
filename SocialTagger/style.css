@@ -79,6 +79,7 @@ body {
   align-items: center;
 }
 
+
 .label-form input[type="text"] {
   flex: 1;
   padding: 10px;
@@ -86,6 +87,46 @@ body {
   border-radius: 5px;
   margin-right: 10px;
   font-size: 14px;
+}
+
+/* Aquí se edita la sección de ETIQUETAS CREADAS*/
+.created-labels {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 15%;
+  margin-right: 0px;
+  font-size: 14px;
+  scroll-behavior: auto;
+  overflow: scroll;
+
+}
+
+.contenedor::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.contenedor::-webkit-scrollbar:vertical {
+  width:10px;
+}
+
+.contenedor::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+  display: none;
+} 
+
+.contenedor::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+.contenedor::-webkit-scrollbar-thumb {
+  background-color: #797979;
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+
+.contenedor::-webkit-scrollbar-track {
+  border-radius: 10px;  
 }
 
 .label-form button {
@@ -127,3 +168,4 @@ body {
 .matching-labels {
   color: #28a745; /* Color verde */
 }
+

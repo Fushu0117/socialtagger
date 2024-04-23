@@ -1,64 +1,57 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const supabaseUrl = 'https://azkicerksbuqfeognvvk.supabase.co-supabase-url';
-    const supabaseAnonKey = 'your-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6a2ljZXJrc2J1cWZlb2dudnZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDUyMDUyNDQsImV4cCI6MjAyMDc4MTI0NH0.o64DaZv4kTT_28qsYeGiGsjKt8Xn4tqGJE2jWC_5rTQ-anon-key';
-    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+import * as supabase from "https://cdn.skypack.dev/@supabase/supabase-js";
 
-        const videoPlayer = new Plyr('#videoPlayer', {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen']
-        });
-    
-        let totalLabels = 0;
-        let matchingLabels = 0;
-    
-        window.saveLabel = async function() {
-            const labelText = document.getElementById('labelText').value;
-            const videoTime = Math.floor(videoPlayer.currentTime); // Gets the current time of the video in seconds
-            const videoName = '06denoviembre2023_video2.mp4'; // Change this based on the video
-    
-            // Check if the label already exists in the database
-            const { data: existingLabels, error: fetchError } = await supabase
-                .from('etiquetas')
-                .select('id')
-                .eq('texto', labelText)
-                .eq('video', videoName)
-                .single();
-    
-            if (fetchError) {
-                console.error('Error fetching labels:', fetchError);
-                return;
-            }
-    
-            if (existingLabels) {
-                alert('This label matches an existing one.');
-                matchingLabels++;
-                document.getElementById('matchingLabels').textContent = matchingLabels;
-                return;
-            }
-    
-            // Save the label to the database
-            const { data: newLabel, error: saveError } = await supabase
-                .from('etiquetas')
-                .insert([{ tiempo: videoTime.toString(), texto: labelText, video: videoName }]);
-    
-            if (saveError) {
-                console.error('Error saving label:', saveError);
-            } else {
-                console.log('Label saved:', newLabel);
-                totalLabels++;
-                document.getElementById('totalLabels').textContent = totalLabels;
-                document.querySelector('.label-message').style.display = 'block';
-                document.getElementById('labelText').value = ''; // Clear the input after saving
-    
-                // Add the created label to the list
-                const createdLabelsList = document.getElementById('createdLabels');
-                const listItem = document.createElement('li');
-                listItem.textContent = `${videoTime}s: ${labelText}`;
-                createdLabelsList.appendChild(listItem);
-            }
-        };
-    
-        videoPlayer.on('ready', function() {
-            console.log('Video 2 is ready to play');
-        });
-    });
-    
+const supabaseUrl = "https://azkicerksbuqfeognvvk.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6a2ljZXJrc2J1cWZlb2dudnZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDUyMDUyNDQsImV4cCI6MjAyMDc4MTI0NH0.o64DaZv4kTT_28qsYeGiGsjKt8Xn4tqGJE2jWC_5rTQ";
+
+// Iniciar el cliente de Supabase
+const db = supabase.createClient(supabaseUrl, supabaseKey);
+
+const insertLabel = async (text, videoName) => {
+  let videoPlayer = document.getElementById('videoPlayer');
+  const currentTime = Math.floor(videoPlayer.currentTime); // Obtener el tiempo actual del video en segundos
+
+  // Primero, verifica si ya existe una etiqueta con el mismo texto
+  const { data: existingLabels, error: fetchError } = await db
+    .from("etiquetas")
+    .select("texto")
+    .eq("texto", text);
+
+  if (fetchError) {
+    console.error(fetchError);
+    return;
+  }
+
+  // Insertar la nueva etiqueta si no se encontraron coincidencias
+  const { data, error } = await db.from("etiquetas").insert([
+    {
+      tiempo: currentTime.toString(),
+      texto: text,
+      video: videoName,
+    },
+  ]);
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  // Añadir la etiqueta al div de etiquetas creadas
+  const createdLabelsList = document.getElementById("createdLabels");
+  const newLabel = document.createElement("li");
+  newLabel.textContent = `${text} - Tiempo: ${currentTime}s`;
+  createdLabelsList.appendChild(newLabel);
+
+  console.log("La etiqueta se guardó correctamente:", data);
+
+ // Mostrar mensaje si se encuentra una coincidencia
+ if (existingLabels.length > 0) {
+    const matchMessage = document.getElementById("matchMessage");
+    matchMessage.style.display = "block"; // Mostrar el mensaje
+  }
+};
+
+document.getElementById('botonCrearEtiqueta').addEventListener('click', async () => {
+  const labelText = document.getElementById("labelText").value.trim();
+  const videoName = '06denoviembre_video2.mp4'; // Cambiar esto según el video
+  await insertLabel(labelText, videoName);
+});

@@ -3,36 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video 2</title>
+<title>Video 1</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="awesomplete.css">
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.css"
+/>
 <script src="https://cdn.plyr.io/3.7.2/plyr.polyfilled.js"></script>
-<script src="video2.js" defer></script>
+
 </head>
 <body>
+
+   
+ 
 <div class="video-menu">
     <button onclick="window.location='video1.html'">Video 1</button>
-    <button onclick="window.location='video3.html'">Video 2</button>
+    <button onclick="window.location='video2.html'">Video 2</button>
     <button onclick="window.location='video4.html'">Video 4</button>
     <button onclick="window.location='video5.html'">Video 5</button>
 </div>
 <div class="video-container">
-    <video id="" class="plyr" controls>
+    <video id="videoPlayer" class="plyr" controls>
         <source src="videos/20deoctubre2023_video3.mp4" type="video/mp4">
         Tu navegador no soporta videos HTML5.
     </video>
 
-   
     <div class="label-form">
-        <input type="text" id="labelText" placeholder="Enter label text here" />
-        <button onclick="saveLabel()">Crear etiqueta</button>
-    </div>
+        <input class="awesomplete" type="text" id="labelText" placeholder="Texto de la etiqueta" />
 
-    <div class="label-counter">
-        <p>Total labels created: <span id="totalLabels">0</span></p>
+
+<datalist id="mylist">
+
+    
+</datalist>
+
+
+        <button id="botonCrearEtiqueta">Crear etiqueta</button>
+
     </div>
-    <div class="label-counter">
-    <p>Matching labels: <span id="matchingLabels">0</span></p>
+    <div class="label-message" id="matchMessage" style="display: none; color: green;">
+
+        <p>
+            ¡Coincidencia encontrada!
+        </p>
+        
+
+    </div>
+    
+
+<div class="label-message" style="display: none;">
+    <br>
+    <br>
+    <p>Etiqueta guardada correctamente!</p>
 </div>
+
+<div class="created-labels">
+    <br>
+    <br>
+    <h3> Etiquetas creadas:</h3>
+    <ul id="createdLabels">
+        <!-- Las etiquetas se añadirán aquí -->
+    </ul>
 </div>
+
+
+</div>
+<script src="video2.js" type="module"></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.js"></script>
+
+
+<script src="awesomplete.js"></script>
+
+
+<script>     
+
+var input = document.getElementById("labelText");
+
+
+window.addEventListener("load", function (event) {
+    console.log("'Todos los recursos terminaron de cargar!");
+    loadAndAppendOptions();
+
+  });
+
+
+let mylist = document.getElementById('mylist');
+
+async function loadAndAppendOptions() {
+    try{
+        let lista=[];
+  const response = await fetch('https://stunning-capybara-1efe1a.netlify.app/.netlify/functions/api/tags');
+        const data = await response.json();
+        console.log(data);
+        data.data.forEach((tag) => {
+        console.log(tag.note);
+        lista.push(tag.note);
+            const option = document.createElement("option");  // Crear un nuevo elemento option
+        option.textContent = tag.note;  // Ajustar el texto del option al nombre del tag
+        mylist.appendChild(option);  // Añadir el option al select
+        });
+    //const selectElement = document.getElementById("mylist");  // Obtener el elemento select por su ID
+    new Awesomplete(input, {
+	list:lista
+});
+
+  } catch (error) {
+    console.error("Failed to fetch tags:", error);  // Manejo de errores en la consola
+  }
+}
+
+</script>
+
 </body>
 </html>
